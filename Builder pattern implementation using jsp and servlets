@@ -1,0 +1,120 @@
+java
+
+
+public class Car {
+    private final String make;
+    private final String model;
+    private final int year;
+    private final boolean hasSunroof;
+    private final boolean hasLeatherSeats;
+
+    private Car(CarBuilder builder) {
+        this.make = builder.make;
+        this.model = builder.model;
+        this.year = builder.year;
+        this.hasSunroof = builder.hasSunroof;
+        this.hasLeatherSeats = builder.hasLeatherSeats;
+    }
+
+    // Getters for each attribute
+
+    public static class CarBuilder {
+        private String make;
+        private String model;
+        private int year;
+        private boolean hasSunroof;
+        private boolean hasLeatherSeats;
+
+        public CarBuilder setMake(String make) {
+            this.make = make;
+            return this;
+        }
+
+        public CarBuilder setModel(String model) {
+            this.model = model;
+            return this;
+        }
+
+        public CarBuilder setYear(int year) {
+            this.year = year;
+            return this;
+        }
+
+        public CarBuilder setSunroof(boolean hasSunroof) {
+            this.hasSunroof = hasSunroof;
+            return this;
+        }
+
+        public CarBuilder setLeatherSeats(boolean hasLeatherSeats) {
+            this.hasLeatherSeats = hasLeatherSeats;
+            return this;
+        }
+
+        public Car build() {
+            return new Car(this);
+        }
+    }
+}
+
+
+
+Java
+
+
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@WebServlet("/car-builder")
+public class CarBuilderServlet extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String make = req.getParameter("make");
+        String model = req.getParameter("model");
+        int year = Integer.parseInt(req.getParameter("year"));
+        boolean hasSunroof = "on".equalsIgnoreCase(req.getParameter("sunroof"));
+        boolean hasLeatherSeats = "on".equalsIgnoreCase(req.getParameter("leather-seats"));
+
+        Car car = new Car.CarBuilder()
+                .setMake(make)
+                .setModel(model)
+                .setYear(year)
+                .setSunroof(hasSunroof)
+                .setLeatherSeats(hasLeatherSeats)
+                .build();
+
+        // Store the Car object in the session or pass it to the JSP for display
+    }
+}
+
+
+
+
+
+
+
+
+Jsp
+
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<head>
+    <title>Car Builder</title>
+</head>
+<body>
+    <form action="car-builder" method="post">
+        Make: <input type="text" name="make"><br>
+        Model: <input type="text" name="model"><br>
+        Year: <input type="number" name="year"><br>
+        Sunroof: <input type="checkbox" name="sunroof"><br>
+        Leather Seats: <input type="checkbox" name="leather-seats"><br>
+        <input type="submit" value="Build Car">
+    </form>
+</body>
+</html>
+
+
